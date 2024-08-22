@@ -16,5 +16,6 @@ public interface EncryptionAlgorithm {
      * @return The encrypted text.
      */
     String encrypt(String plainText, String key);
+    String decrypt(String encryptedText, String key);
 
 }

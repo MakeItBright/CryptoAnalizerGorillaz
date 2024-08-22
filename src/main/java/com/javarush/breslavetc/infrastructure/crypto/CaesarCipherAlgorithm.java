@@ -38,6 +38,32 @@ public class CaesarCipherAlgorithm  implements EncryptionAlgorithm {
 
         return encrypted.toString();
     }
+
+    @Override
+    public String decrypt(String encryptedText, String key) {
+//        TODO перписать на  .encrypt(encryptedText, Integer.toString(-Integer.parseInt(key)));
+        int shift = Integer.parseInt(key);
+        shift = shift % ALPHABET_SIZE; // Ensure shift is within the bounds of the alphabet size
+
+        StringBuilder decrypted = new StringBuilder();
+        for (char character : encryptedText.toCharArray()) {
+            if (Alphabet.index.containsKey(Character.toLowerCase(character))) {
+                int index = Alphabet.index.get(Character.toLowerCase(character));
+                int newIndex = (index - shift + ALPHABET_SIZE) % ALPHABET_SIZE;
+                char newChar = Alphabet.CHARS[newIndex];
+                if (Character.isUpperCase(character)) {
+                    newChar = Character.toUpperCase(newChar);
+                }
+                decrypted.append(newChar);
+            } else {
+                // If character is not in the alphabet, just append it as is (e.g., unknown characters)
+                decrypted.append(character);
+            }
+        }
+
+        return decrypted.toString();
+    }
+
 }
 
 

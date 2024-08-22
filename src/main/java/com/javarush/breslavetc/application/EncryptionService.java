@@ -3,6 +3,7 @@ package com.javarush.breslavetc.application;
 import com.javarush.breslavetc.domain.model.EncryptedData;
 import com.javarush.breslavetc.domain.model.PlainText;
 import com.javarush.breslavetc.domain.service.EncryptionAlgorithm;
+import com.javarush.breslavetc.exception.EncryptionException;
 import com.javarush.breslavetc.infrastructure.file.FileHandler;
 
 /**
@@ -26,17 +27,22 @@ public class EncryptionService {
      * @param key The key to use for encryption.
      */
     public void encryptFile(String filePath, String key) {
-        // Load the plain text from the file
-        PlainText plainText = fileHandler.loadPlainText(filePath);
+        try {
+            // Load the plain text from the file
+            PlainText plainText = fileHandler.loadPlainText(filePath);
 
-        // Encrypt the plain text
-        String encryptedContent = encryptionAlgorithm.encrypt(plainText.getContent(), key);
+            // Encrypt the plain text
+            String encryptedContent = encryptionAlgorithm.encrypt(plainText.getContent(), key);
 
-        // Create an EncryptedData object with the encrypted content
-        EncryptedData encryptedData = new EncryptedData(encryptedContent);
+            // Create an EncryptedData object with the encrypted content
+            EncryptedData encryptedData = new EncryptedData(encryptedContent);
 
-        // Save the encrypted data to a new file
-        String encryptedFilePath = filePath + ".enc";
-        fileHandler.saveEncryptedData(encryptedFilePath, encryptedData);
+            // Save the encrypted data to a new file
+            String encryptedFilePath = filePath + ".enc";
+            System.out.printf(encryptedFilePath);
+            fileHandler.saveEncryptedData(encryptedFilePath, encryptedData);
+        } catch (Exception e) {
+            throw new EncryptionException("Failed to encrypt file: " + filePath, e);
+        }
     }
 }
